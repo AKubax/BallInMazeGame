@@ -28,9 +28,17 @@ class Ball{
         int x = 0, y = 0;
         Direction dir = NOWHERE;
 
-    private:
-        static HDC myHDC = txLoadImage ("Resources/Ball.bmp");
-        static HDC enemyHDC = txLoadImage ("Resources/EnemyBall.bmp");
+        void draw(){
+            txTransparentBlt (txDC(), x - 14, y - 14, 28, 28, myHDC, 0, 0, TX_WHITE);
+        }
+
+    protected:
+        HDC myHDC = txLoadImage ("Resources/Ball.bmp");
+};
+
+class PlayerBall : public Ball{
+    public:
+        Direction dir = NOWHERE;
 
         void updateDirection(){
             if(GetAsyncKeyState(keyUp)) dir = UP;
@@ -40,6 +48,12 @@ class Ball{
 
             dir = NOWHERE;
         }
+}
+
+
+class GameManager{
+    Ball balls[2];
+
 
 }
 
@@ -49,22 +63,12 @@ class Ball{
 
 //END OF PROTOTYPES
 
-void startServer(void*){
-    Game game;
-    game.start();
-}
-
-void startPeople(void*){
-    Player p1("Resources/Ball.bmp", "Resources/EnemyBall.bmp", "Resources/Maze.bmp", 1, VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT);
-    Player p2("Resources/Ball.bmp", "Resources/EnemyBall.bmp", "Resources/Maze.bmp", 2, VK_NUMPAD8, VK_NUMPAD2, VK_NUMPAD4, VK_NUMPAD6);
-    p1.start();
-    p2.start();
-}
 
 int main(){
-    _beginthread(startServer, 0, NULL);
-    Sleep(100);
-    _beginthread(startPeople, 0, NULL);
-    Sleep(100000);
+    txCreateWindow (800, 450);
+    Ball b;
+    b.x = 400;
+    b.y = 225;
+    b.draw();
 }
 
